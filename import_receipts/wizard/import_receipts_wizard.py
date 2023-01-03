@@ -34,12 +34,14 @@ class import_receipts_wizard(models.TransientModel):
         #Create receipt information
         partner_id = self.env['res.partner'].search([('name', '=', df['Vendor_ID'].iloc[0])], limit=1)
         location_id = self.env['stock.location'].search([('complete_name', '=', df['Location_ID'].iloc[0])], limit=1)
+        parent_location = self.env['stock.location'].search([('complete_name', '=', df['Parent_Location'].iloc[0])], limit=1)[0].id
         location_dest_id = self.env['stock.location'].search([('name', '=', df['Destination_Location_ID'].iloc[0])], limit=1)
         picking_type_id = self.env['stock.picking.type'].search([('sequence_code', '=', df['Code'].iloc[0])], limit=1)
         date = self.date
 
         if(not location_dest_id):
             location_dest_id = self.env['stock.location'].sudo().create([{'name':df['Destination_Location_ID'].iloc[0]}])
+            location_dest_id.write({'location_id':parent_location})
 
         if(isinstance(location_dest_id, list)):
             location_dest_id = location_dest_id[0]
@@ -52,6 +54,7 @@ class import_receipts_wizard(models.TransientModel):
             'location_dest_id': location_dest_id.id,
             'date': date,
             "scheduled_date": date,
+            'date_done': date,
             'origin': df['Origin'].iloc[0],
             'move_lines': [],
             'picking_type_id': picking_type_id[0].id,
@@ -99,6 +102,9 @@ class import_receipts_wizard(models.TransientModel):
                 'picking_id': receipt_id.id,
                 'picking_type_id': picking_type_id[0].id,
                 'company_id': company_id[0].id,
+                'date':date,
+                'create_date':date,
+                'write_date':date,
             }
 
             move_id = move_model.create([move_vals])
@@ -118,8 +124,11 @@ class import_receipts_wizard(models.TransientModel):
                 # 'lot_name': row['Lot_Number'],
                 'package_id': source_package_id.id,
                 'result_package_id': package_id.id,
+                'date': date,
+                'create_date': date,
+                'write_date': date,
             }
 
             move_line_id = move_line_model.create([move_line_vals])
 
-            receipt_id.write({'date': date, "scheduled_date": date})
+            receipt_id.write({'date': date, "scheduled_date": date,'date_done':date})

@@ -18,7 +18,7 @@
                             <Strong>Download Receipt Template</Strong>
                             <a 
                                 role="button"
-                                href="import_receipts/static/receipts.xlsx"
+                                href="import_receipts/static/receipts.xls"
                                 class="btn-primary"
                                 style="margin: 0 10px; font-size: 12px; line-height: 1.5; border-radius: 3px; padding: 8px 10px; color: #ffffff;">
                                 <i class="fa fa-download"/>Download
