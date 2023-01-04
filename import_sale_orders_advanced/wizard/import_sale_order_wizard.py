@@ -27,6 +27,7 @@ class import_sale_order_wizard(models.TransientModel):
         df = pd.DataFrame(data[1:], columns=data[0])
         return df
 
+    #Import sales orders from excel file button
     def import_sale_order(self):
         line_counter = 1
         error = ""
