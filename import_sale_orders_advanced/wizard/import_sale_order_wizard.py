@@ -11,6 +11,8 @@ class import_sale_order_wizard(models.TransientModel):
     _description = "Import Sales Orders With Advanced Options"
 
     #Create fields
+    customer = fields.Many2one('res.partner', string='Customer', required=True)
+    template = fields.Many2one('sale.order.template', string='Template', required=True)
     date = fields.Datetime(string='Order Date', required=True, default=datetime.now())
     file = fields.Binary(string='Input File', required=True)
     create_packages = fields.Boolean(string='Create Packages', default=True)
@@ -37,4 +39,18 @@ class import_sale_order_wizard(models.TransientModel):
         df = self.sheet_to_df(sheet)
 
         #Create sale order information
-        partner_id = self.env['res.partner'].search([('name', '=', df['Customer_ID'].iloc[0])], limit=1)
+        partner_id = self.customer.id
+        date = self.date
+        create_packages = self.create_packages
+        template = self.template
+
+        #Create sale order
+        sale_order_model = self.env['sale.order']
+        sale_order_vals = {
+            'partner_id': partner_id,
+            'date_order': date,
+            'order_line': [],
+            'sale_order_template_id': template.id,
+        }
+
+        sale_order_model.create(sale_order_vals)

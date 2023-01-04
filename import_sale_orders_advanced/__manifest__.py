@@ -8,7 +8,7 @@
     'version': '0.1',
     'depends': ['base','sale_management'],
     'data': [
-        'security/import_sale_orders_security.xml',
+        'security/import_sale_order_security.xml',
         'security/ir.model.access.csv',
         'wizard/import_sale_order_wizard.xml',
         'views/sale_view.xml',

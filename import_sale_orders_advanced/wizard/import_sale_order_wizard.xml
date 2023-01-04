@@ -7,7 +7,9 @@
             <form string="Import Sale Order">
                 <group>
                     <field name="date" />
-                    <field name="create_packages" />
+                    <field name="customer" />
+                    <field name="create_packages" widget="boolean_toggle"/>
+                    <field name="template" />
                     <field name="file" />
                 </group>
                 <footer>
