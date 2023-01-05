@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="import_receipt_line_form" model="ir.ui.view">
+        <field name="name">Import Receipt Line Form</field>
+        <field name="model">import.receipt.line.wizard</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form string="Import Receipt Lines">
+                <group>
+                    <field name="date" />
+                    <field name="create_packages" widget="boolean_toggle"/>
+                    <field name="create_lots" widget="boolean_toggle"/>
+                    <field name="file" />
+                </group>
+                <footer>
+                    <button name="import_receipt_lines" string="Apply" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                    <div style="float: right;">
+                        <Strong>Download Receipt Template</Strong>
+                        <a 
+                            role="button"
+                            href="import_receipts/static/receipts.xls"
+                            class="btn-primary"
+                            style="margin: 0 10px; font-size: 12px; line-height: 1.5; border-radius: 3px; padding: 8px 10px; color: #ffffff;">
+                            <i class="fa fa-download"/>Download
+                        </a>
+                    </div>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_import_receipt_line_wizard" model="ir.actions.act_window">
+        <field name="name">Import Receipt Lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">import.receipt.line.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="import_receipt_line_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -31,6 +31,10 @@ class import_receipt_line_wizard(models.TransientModel):
         
         current_receipt = self.env['stock.picking'].browse(self._context.get('active_id'))
 
+        wb = xlrd.open_workbook(file_contents=base64.decodestring(self.file))
+        sheet = wb.sheet_by_index(0)
+        df = self.sheet_to_df(sheet)
+
         #Create receipt lines
         for index, row in df.iterrows():
             product_id = self.env['product.product'].search([('default_code', '=', row['Product_ID'])], limit=1)

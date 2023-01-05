@@ -17,16 +17,17 @@
     <field name="model">stock.picking</field>
     <field name="inherit_id" ref="stock.view_picking_form"/>
     <field name="arch" type="xml">
-      <xpath expr="header" position="inside">
+      <xpath expr="//header" position="inside">
         <button 
           name="import_receipt_lines" 
           string="Import Receipt Lines" 
           type="object" 
           states="draft,ready"
           class="btn-primary"
-          groups="import_receipts_group"
+          groups="import_receipts.import_receipts_group"
           context="{'receipt_id': id}"
         />
       </xpath>
-  </record>>
+    </field>
+  </record>
 </odoo>
