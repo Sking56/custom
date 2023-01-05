@@ -22,6 +22,7 @@
     'data': [
         'security/import_receipts_security.xml',
         'security/ir.model.access.csv',
+        'wizard/import_receipt_line_wizard.xml'
         'wizard/import_receipts_wizard.xml',    
         'views/stock_view.xml', 
     ],

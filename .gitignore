@@ -1,1 +1,4 @@
+#
 odoo.log
+*.ds_store
+*.pyc

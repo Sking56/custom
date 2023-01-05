@@ -70,7 +70,11 @@ class import_receipts_wizard(models.TransientModel):
             stock_quant_model = self.env['stock.quant']
 
             #Create line information with product, lot, and package
-            product_id = self.env['product.product'].search([('default_code', '=', row['Product_Reference'])], limit=1)[0]
+            product_id = self.env['product.product'].search([('default_code', '=', row['Product_Reference'])], limit=1)
+            if(not product_id):
+                raise UserError("Product not found: " + row['Product_Reference'])
+
+            product_id = product_id[0]
             product_uom= self.env['uom.uom'].search([('name', '=', row['Uom'])], limit=1)[0]
             package_id = self.env['stock.quant.package'].search([('name', '=', row['Package_Name'])], limit=1)
             source_package_id = self.env['stock.quant.package'].search([('name', '=', df['Origin'].iloc[0])], limit=1)

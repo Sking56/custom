@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <data>
-    <!-- Import Receipts in Inventory Side Menu-->
+    <!-- Import Receipts in Inventory Side Menu -->
     <menuitem 
       id="menu_import_receipts"
       name="Import Receipts"
@@ -11,4 +11,22 @@
       action="action_import_receipts"
     />
   </data>
+  <!-- Import Receipt Lines from Open Receipt -->
+  <record id="inherit_receipt_view_form_for_import" model="ir.ui.view">
+    <field name="name">Inherit Receipt Form for Line Import</field>
+    <field name="model">stock.picking</field>
+    <field name="inherit_id" ref="stock.view_picking_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="header" position="inside">
+        <button 
+          name="import_receipt_lines" 
+          string="Import Receipt Lines" 
+          type="object" 
+          states="draft,ready"
+          class="btn-primary"
+          groups="import_receipts_group"
+          context="{'receipt_id': id}"
+        />
+      </xpath>
+  </record>>
 </odoo>
