@@ -43,6 +43,15 @@ class import_receipts_wizard(models.TransientModel):
             location_dest_id = self.env['stock.location'].sudo().create([{'name':df['Destination_Location_ID'].iloc[0]}])
             location_dest_id.write({'location_id':parent_location})
 
+        if not picking_type_id:
+            raise UserError("Picking type not found: " + df['Code'].iloc[0])
+        elif not partner_id:
+            raise UserError("Partner not found: " + df['Vendor_ID'].iloc[0])
+        elif not location_id:
+            raise UserError("Location not found: " + df['Location_ID'].iloc[0])
+        elif not parent_location:
+            raise UserError("Parent location not found: " + df['Parent_Location'].iloc[0])
+
         if(isinstance(location_dest_id, list)):
             location_dest_id = location_dest_id[0]
 
@@ -76,6 +85,10 @@ class import_receipts_wizard(models.TransientModel):
 
             product_id = product_id[0]
             product_uom= self.env['uom.uom'].search([('name', '=', row['Uom'])], limit=1)[0]
+            if not product_uom:
+                raise UserError("Uom not found: " + row['Uom'])
+
+            
             package_id = self.env['stock.quant.package'].search([('name', '=', row['Package_Name'])], limit=1)
             source_package_id = self.env['stock.quant.package'].search([('name', '=', df['Origin'].iloc[0])], limit=1)
             if(not package_id):
