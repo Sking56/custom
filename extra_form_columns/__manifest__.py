@@ -1,14 +1,15 @@
 {
-    'name': 'Operation On Hand Qty',
-    'summary': 'Operation On Hand Qty',
-    'description': """Adds a new column to the stock picking form that shows how much quantity on hand a product has.""",
+    'name': 'Extra Form Columns',
+    'summary': 'Add Extra Columns to Forms',
+    'description': """Adds extra columns to various different forms
+    - Adds a new column to the product moves form that shows what destination column was used.""",
     'author': 'SJC',
     'website': 'http://www.google.com',
-    'category': 'Inventory',
+    'category': 'Technical',
     'version': '0.1',
     'depends': ['base','stock'],
     'data': [
-        'views/stock_view.xml',
+        'views/stock_move_line_view.xml',
     ],
     'external_dependencies': {
         'python': ['openpyxl', 'pandas', 'xlrd'],
