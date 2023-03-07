@@ -13,6 +13,7 @@ class import_receipts_wizard(models.TransientModel):
     #Set default date to today
     date = fields.Datetime(string='Scheduled Date', required=True, default=datetime.now())
     file = fields.Binary(string='File', required=True)
+    outbound = fields.Boolean(string='Outbound', default=False)
 
     #Convert excel sheet to dataframe
     def sheet_to_df(self, sheet):
@@ -90,7 +91,15 @@ class import_receipts_wizard(models.TransientModel):
 
             
             package_id = self.env['stock.quant.package'].search([('name', '=', row['Package_Name'])], limit=1)
-            source_package_id = self.env['stock.quant.package'].search([('name', '=', df['Origin'].iloc[0])], limit=1)
+            if(self.outbound):
+                package_id = self.env['stock.quant.package'].search([('name', '=', row['Package_Name'])], limit=1)
+                source_package_id = self.env['stock.quant.package'].search([('name', '=', row['Source_Package_Name'])], limit=1)
+                location_id = self.env['stock.location'].search([('complete_name', '=', row['From'])], limit=1)
+                owner_id = self.env['res.partner'].search([('name', '=', row['From_Owner'])], limit=1)
+            else:
+                package_id = self.env['stock.quant.package'].search([('name', '=', row['Package_Name'])], limit=1)
+                source_package_id = self.env['stock.quant.package'].search([('name', '=', df['Origin'].iloc[0])], limit=1)
+
             if(not package_id):
                 package_id = self.env['stock.quant.package'].create([{'name':row['Package_Name'],'company_id':company_id[0].id}])
             elif(not isinstance(package_id, int)):
@@ -128,23 +137,43 @@ class import_receipts_wizard(models.TransientModel):
 
             move_line_model = self.env['stock.move.line']
 
-            move_line_vals = {
-                'picking_id': receipt_id.id,
-                'move_id': move_id.id,
-                'company_id': company_id[0].id,
-                'product_id': product_id.id,
-                'product_uom_id': product_uom[0].id,
-                'qty_done': row['Quantity'],
-                'location_id': location_id[0].id,
-                'location_dest_id': location_dest_id.id,
-                'lot_id': lot_id.id,
-                # 'lot_name': row['Lot_Number'],
-                'package_id': source_package_id.id,
-                'result_package_id': package_id.id,
-                'date': date,
-                'create_date': date,
-                'write_date': date,
-            }
+            if(self.outbound):
+                move_line_vals = {
+                    'picking_id': receipt_id.id,
+                    'move_id': move_id.id,
+                    'company_id': company_id[0].id,
+                    'product_id': product_id.id,
+                    'product_uom_id': product_uom[0].id,
+                    'qty_done': row['Quantity'],
+                    'location_id': location_id[0].id,
+                    'location_dest_id': location_dest_id.id,
+                    'lot_id': lot_id.id,
+                    # 'lot_name': row['Lot_Number'],
+                    'package_id': source_package_id.id,
+                    'result_package_id': package_id.id,
+                    'date': date,
+                    'create_date': date,
+                    'write_date': date,
+                    'owner_id': owner_id[0].id,
+                }
+            else:
+                move_line_vals = {
+                    'picking_id': receipt_id.id,
+                    'move_id': move_id.id,
+                    'company_id': company_id[0].id,
+                    'product_id': product_id.id,
+                    'product_uom_id': product_uom[0].id,
+                    'qty_done': row['Quantity'],
+                    'location_id': location_id[0].id,
+                    'location_dest_id': location_dest_id.id,
+                    'lot_id': lot_id.id,
+                    # 'lot_name': row['Lot_Number'],
+                    'package_id': source_package_id.id,
+                    'result_package_id': package_id.id,
+                    'date': date,
+                    'create_date': date,
+                    'write_date': date,
+                }
 
             move_line_id = move_line_model.create([move_line_vals])
 

@@ -10,6 +10,7 @@
                     <group>
                         <field name="date" />
                         <field name="file" />
+                        <field name="outbound" />
                     </group>
                     <footer>
                         <button name="import_receipts" string="Apply" type="object" class="btn-primary"/>
